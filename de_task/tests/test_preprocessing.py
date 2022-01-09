@@ -1,9 +1,7 @@
-from src.etl.preprocessing import preprocess_input, SCHEMA
-from pyspark import SparkContext
-from pyspark.sql import SQLContext
 import pandas as pd
-
-from pyspark.sql import SparkSession
+from pyspark import SparkContext
+from pyspark.sql import SparkSession, SQLContext
+from src.etl.preprocessing_new import SUPPLIER_SCHEMA, preprocess_input
 
 
 def test_empty_input():
@@ -30,7 +28,7 @@ def test_rows_from_different_items():
     sql_context = SQLContext(spark_context)
     spark = SparkSession.builder.getOrCreate()
 
-    schema = SCHEMA
+    schema = SUPPLIER_SCHEMA
 
     input_df = spark.read.json(
         "de_task/tests/resources/input_rows_from_different_items.json"
@@ -45,18 +43,25 @@ def test_rows_from_different_items():
                 None,
                 None,
                 None,
+                "2",
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
                 None,
                 "MERCEDES-BENZ",
-                None,
-                None,
-                None,
                 "SLR",
                 "SLR McLaren",
-                None,
-                None,
-                None,
-                None,
-                None,
+                "McLaren",
+                "MERCEDES-BENZ SLR McLaren",
+                "0001fda6-192b-46a8-bc08-0e833f904eed",
             ),
             (
                 None,
@@ -66,17 +71,24 @@ def test_rows_from_different_items():
                 None,
                 None,
                 None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                "235",
+                None,
+                None,
+                None,
                 "MERCEDES-BENZ",
-                None,
-                None,
-                None,
                 "ML 350",
                 "ML 350 Inspiration",
-                None,
-                None,
-                None,
-                None,
-                None,
+                "ML 350 Inspiration",
+                "MERCEDES-BENZ ML 350 Inspiration",
+                "00107c2d-0071-4475-88f0-810133638b7e",
             ),
         ],
         schema,
@@ -98,13 +110,25 @@ def test_rows_from_same_item():
     sql_context = SQLContext(spark_context)
     spark = SparkSession.builder.getOrCreate()
 
-    schema = SCHEMA
+    schema = SUPPLIER_SCHEMA
 
     input_df = spark.read.json("de_task/tests/resources/input_rows_from_same_item.json")
 
     expected_output_df = sql_context.createDataFrame(
         [
             (
+                None,
+                "2007",
+                None,
+                None,
+                None,
+                None,
+                "2",
+                None,
+                None,
+                None,
+                None,
+                None,
                 None,
                 None,
                 None,
@@ -113,16 +137,11 @@ def test_rows_from_same_item():
                 None,
                 None,
                 "MERCEDES-BENZ",
-                "2007",
-                None,
-                None,
                 "SLR",
                 "SLR McLaren",
-                None,
-                None,
-                None,
-                None,
-                None,
+                "McLaren",
+                "MERCEDES-BENZ SLR McLaren",
+                "0001fda6-192b-46a8-bc08-0e833f904eed",
             ),
         ],
         schema,
@@ -144,7 +163,7 @@ def test_multiple_rows():
     sql_context = SQLContext(spark_context)
     spark = SparkSession.builder.getOrCreate()
 
-    schema = SCHEMA
+    schema = SUPPLIER_SCHEMA
 
     input_df = spark.read.json("de_task/tests/resources/input_rows_multiple.json")
 
@@ -158,57 +177,78 @@ def test_multiple_rows():
                 None,
                 None,
                 None,
+                "21.3 l/100km",
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
                 "LAMBORGHINI",
-                None,
-                None,
-                None,
                 "MURCIÉLAGO",
                 "Murciélago LP640-4 Cpé",
-                None,
-                None,
-                None,
-                None,
-                "l_km_consumption",
+                "Murciélago LP640-4 Cpé",
+                "LAMBORGHINI Murciélago LP640-4 Cpé",
+                "4ff3d5d3-4fb0-492a-b536-9d4b2500394c",
             ),
             (
                 None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                "MERCEDES-BENZ",
                 "2003",
                 None,
                 None,
-                "ML 350",
-                "ML 350 Inspiration",
+                None,
+                None,
+                "5",
                 None,
                 None,
                 None,
                 None,
                 None,
-            ),
-            (
                 None,
                 None,
                 None,
-                None,
+                "235",
                 None,
                 None,
                 None,
                 "MERCEDES-BENZ",
+                "ML 350",
+                "ML 350 Inspiration",
+                "ML 350 Inspiration",
+                "MERCEDES-BENZ ML 350 Inspiration",
+                "00107c2d-0071-4475-88f0-810133638b7e",
+            ),
+            (
+                None,
                 "2007",
-                None,
-                None,
-                "SLR",
-                "SLR McLaren",
                 None,
                 None,
                 None,
                 "10",
+                "2",
                 None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                "MERCEDES-BENZ",
+                "SLR",
+                "SLR McLaren",
+                "McLaren",
+                "MERCEDES-BENZ SLR McLaren",
+                "0001fda6-192b-46a8-bc08-0e833f904eed",
             ),
         ],
         schema,
@@ -230,13 +270,25 @@ def test_different_values_for_same_attribute():
     sql_context = SQLContext(spark_context)
     spark = SparkSession.builder.getOrCreate()
 
-    schema = SCHEMA
+    schema = SUPPLIER_SCHEMA
 
     input_df = spark.read.json("de_task/tests/resources/input_rows_from_same_item.json")
 
     expected_output_df = sql_context.createDataFrame(
         [
             (
+                None,
+                "2007",
+                None,
+                None,
+                None,
+                None,
+                "2",
+                None,
+                None,
+                None,
+                None,
+                None,
                 None,
                 None,
                 None,
@@ -245,16 +297,11 @@ def test_different_values_for_same_attribute():
                 None,
                 None,
                 "MERCEDES-BENZ",
-                "2007",
-                None,
-                None,
                 "SLR",
                 "SLR McLaren",
-                None,
-                None,
-                None,
-                None,
-                None,
+                "McLaren",
+                "MERCEDES-BENZ SLR McLaren",
+                "0001fda6-192b-46a8-bc08-0e833f904eed",
             ),
         ],
         schema,

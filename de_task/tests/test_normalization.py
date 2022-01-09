@@ -1,10 +1,9 @@
-from pyspark import SparkContext
-from pyspark.sql import SQLContext
-from pyspark.sql import SparkSession
-from pyspark.sql.types import StringType
-from src.etl.normalization import normalize_df, normalize_color, normalize_make
-from src.etl.preprocessing import SCHEMA
 import pandas as pd
+from pyspark import SparkContext
+from pyspark.sql import SparkSession, SQLContext
+from pyspark.sql.types import StringType
+from src.etl.normalization import normalize_color, normalize_df, normalize_make
+from src.etl.preprocessing_new import SUPPLIER_SCHEMA
 
 
 def test_normalization():
@@ -17,34 +16,43 @@ def test_normalization():
     expected_output_df = sql_context.createDataFrame(
         [
             (
-                "Cabriolet",
-                "Silver",
-                "Occasion",
                 None,
-                None,
-                "Porrentruy",
-                None,
-                "Alfa Romeo",
                 "2011",
-                "23900",
-                "kilometer",
-                "8C",
-                "8C",
-                None,
-                None,
+                "2",
+                "schwarz",
                 None,
                 "4",
+                "0",
                 None,
-            ),
+                "4691",
+                "Occasion",
+                '"Ab MFK"',
+                "Silver",
+                "Hinterradantrieb",
+                "Automatik-Getriebe",
+                "23900",
+                "450",
+                "Cabriolet",
+                "Benzin",
+                "Porrentruy",
+                "Alfa Romeo",
+                "8C",
+                "8C",
+                None,
+                "ALFA ROMEO 8C",
+                "b5b48f5d-9170-4388-9160-41d3c756e0e1",
+            )
         ],
-        SCHEMA,
+        SUPPLIER_SCHEMA,
     )
 
-    real_output_df = normalize_df(input_df)
+    attribute_list = ["MakeText", "BodyColorText"]
+
+    real_output_df = normalize_df(input_df, attribute_list)
 
     pd.testing.assert_frame_equal(
-        expected_output_df.sort(SCHEMA.names).toPandas(),
-        real_output_df.sort(SCHEMA.names).toPandas(),
+        expected_output_df.sort(SUPPLIER_SCHEMA.names).toPandas(),
+        real_output_df.sort(SUPPLIER_SCHEMA.names).toPandas(),
         check_like=True,
     )
 
@@ -70,7 +78,6 @@ def test_normalize_make():
         StringType(),
     )
 
-    print(input_df)
     real_output_df = input_df.withColumn("value", normalize_make("value"))
 
     pd.testing.assert_frame_equal(

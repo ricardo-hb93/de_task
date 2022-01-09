@@ -1,7 +1,9 @@
 import re
+from typing import List
+
 from pyspark.sql import DataFrame
-from pyspark.sql.types import StringType
 from pyspark.sql.functions import udf
+from pyspark.sql.types import StringType
 
 SPECIAL_CASES = dict({"seat": "SEAT", "delorean": "DeLorean"})
 
@@ -46,7 +48,7 @@ def normalize_color(color: str) -> str:
     return "Other"
 
 
-def normalize_df(df: DataFrame) -> DataFrame:
-    return df.withColumn("make", normalize_make(df["make"])).withColumn(
-        "color", normalize_color(df["color"])
+def normalize_df(df: DataFrame, attributes: List[str]) -> DataFrame:
+    return df.withColumn(attributes[0], normalize_make(df[attributes[0]])).withColumn(
+        attributes[1], normalize_color(df[attributes[1]])
     )
