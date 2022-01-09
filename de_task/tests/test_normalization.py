@@ -3,7 +3,7 @@ from pyspark import SparkContext
 from pyspark.sql import SparkSession, SQLContext
 from pyspark.sql.types import StringType
 from src.etl.normalization import normalize_color, normalize_df, normalize_make
-from src.etl.preprocessing_new import SUPPLIER_SCHEMA
+from src.etl.preprocessing import SUPPLIER_SCHEMA
 
 
 def test_normalization():

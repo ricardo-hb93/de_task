@@ -1,7 +1,7 @@
 import pandas as pd
 from pyspark import SparkContext
 from pyspark.sql import SparkSession, SQLContext
-from src.etl.preprocessing_new import SUPPLIER_SCHEMA, preprocess_input
+from src.etl.preprocessing import SUPPLIER_SCHEMA, preprocess_input
 
 
 def test_empty_input():
