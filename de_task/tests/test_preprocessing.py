@@ -8,11 +8,11 @@ def test_empty_input():
     spark_context = SparkContext()
     spark = SparkSession.builder.getOrCreate()
 
-    input = spark.read.json(spark_context.parallelize([""]))
+    input_df = spark.read.json(spark_context.parallelize([""]))
 
     expected_output = spark.read.json(spark_context.parallelize([""]))
 
-    real_output = preprocess_input(input)
+    real_output = preprocess_input(input_df)
 
     pd.testing.assert_frame_equal(
         expected_output.toPandas(),

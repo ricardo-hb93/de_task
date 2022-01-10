@@ -22,6 +22,6 @@ def extract_value_from_consumptiontotaltext(text: str) -> str:
 
 @udf(returnType=StringType())
 def extract_unit_from_consumptiontotaltext(text: str) -> str:
-    if not text:
+    if not text or text == "null":
         return text
     return text.split()[1]
